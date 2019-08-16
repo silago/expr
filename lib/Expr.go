@@ -1,4 +1,4 @@
-package expr
+package lib
 /*
 	based on
 	https://github.com/alecthomas/participle/blob/master/_examples/expr/main.go
