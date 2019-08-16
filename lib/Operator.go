@@ -20,12 +20,36 @@ var operatorMap = map[string]Operator{
 	"-": OpSub,
 	"*": OpMul,
 	"/": OpDiv,
+	"=": OpDiv,
+}
+
+
+
+type OpTerm struct {
+	Operator Operator `@("+" | "-" | "$")`
+	Term     *Term    `@@`
+}
+
+type Term struct {
+	Left  *Factor     `@@`
+	Right []*OpFactor `{ @@ }`
+}
+
+type Factor struct {
+	Base     *Value `@@`
+	Exponent *Value `[ "^" @@ ]`
+}
+
+type OpFactor struct {
+	Operator Operator `@("*" | "/")`
+	Factor   *Factor  `@@`
 }
 
 func (o *Operator) Capture(s []string) error {
 	*o = operatorMap[s[0]]
 	return nil
 }
+
 
 func (o Operator) String() string {
 	switch o {
@@ -41,15 +65,6 @@ func (o Operator) String() string {
 	panic("unsupported operator")
 }
 
-type Factor struct {
-	Base     *Value `@@`
-	Exponent *Value `[ "^" @@ ]`
-}
-
-type OpFactor struct {
-	Operator Operator `@("*" | "/")`
-	Factor   *Factor  `@@`
-}
 
 func (f *Factor) String() string {
 	out := f.Base.String()
@@ -65,18 +80,6 @@ func (f *Factor) Eval(ctx Context) float64 {
 		return math.Pow(b, f.Exponent.Eval(ctx))
 	}
 	return b
-}
-
-type OpTerm struct {
-	Operator Operator `@("+" | "-")`
-	Term     *Term    `@@`
-}
-
-
-
-type Term struct {
-	Left  *Factor     `@@`
-	Right []*OpFactor `{ @@ }`
 }
 
 // Display
