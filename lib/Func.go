@@ -10,6 +10,11 @@ type Func struct {
 	Right Expression `"(" { @@ } ")"`
 }
 
+func (f *Func) GetVariableNames() (result []string) {
+	result = f.Right.GetVariableNames()
+	return
+}
+
 func (f *Func) Eval(contexts Context) float64 {
 	var result = f.Right.Eval(contexts)
 	switch f.Name {
@@ -22,11 +27,10 @@ func (f *Func) Eval(contexts Context) float64 {
 	return result
 }
 
-
 func (f *Func) String() string {
 	out := []string{f.Name}
 	out = append(out, "(")
 	out = append(out, f.Right.String())
-	out = append(out, ")" )
+	out = append(out, ")")
 	return strings.Join(out, " ")
 }

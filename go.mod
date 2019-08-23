@@ -1,4 +1,4 @@
-module github.com/silago/expr
+module expr
 
 require (
 	github.com/alecthomas/participle v0.3.0

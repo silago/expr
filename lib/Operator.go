@@ -23,8 +23,6 @@ var operatorMap = map[string]Operator{
 	"=": OpDiv,
 }
 
-
-
 type OpTerm struct {
 	Operator Operator `@("+" | "-" | "$")`
 	Term     *Term    `@@`
@@ -50,7 +48,6 @@ func (o *Operator) Capture(s []string) error {
 	return nil
 }
 
-
 func (o Operator) String() string {
 	switch o {
 	case OpMul:
@@ -65,13 +62,16 @@ func (o Operator) String() string {
 	panic("unsupported operator")
 }
 
-
 func (f *Factor) String() string {
 	out := f.Base.String()
 	if f.Exponent != nil {
 		out += " ^ " + f.Exponent.String()
 	}
 	return out
+}
+
+func (f *Factor) GetVariableNames() (result []string) {
+	return f.Base.GetVariableNames()
 }
 
 func (f *Factor) Eval(ctx Context) float64 {
@@ -114,9 +114,13 @@ func (o Operator) Eval(l, r float64) float64 {
 	panic("unsupported operator")
 }
 
-
-
-
+func (t *Term) GetVariableNames() (result []string) {
+	result = t.Left.GetVariableNames()
+	for _, r := range t.Right {
+		result = append(result, r.Factor.GetVariableNames()...)
+	}
+	return
+}
 
 func (t *Term) Eval(ctx Context) float64 {
 	n := t.Left.Eval(ctx)
@@ -125,4 +129,3 @@ func (t *Term) Eval(ctx Context) float64 {
 	}
 	return n
 }
-

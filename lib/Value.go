@@ -23,6 +23,17 @@ func (v *Value) String() string {
 	return "(" + v.Subexpression.String() + ")"
 }
 
+func (v *Value) GetVariableNames() (result []string) {
+	if v.Number != nil {
+	} else if v.Func != nil {
+		result = v.Func.GetVariableNames()
+	} else if v.Variable != nil {
+		result = []string{*v.Variable}
+	} else {
+		result = v.Subexpression.GetVariableNames()
+	}
+	return
+}
 
 func (v *Value) Eval(ctx Context) float64 {
 	switch {
@@ -34,7 +45,7 @@ func (v *Value) Eval(ctx Context) float64 {
 			panic("no such variable " + *v.Variable)
 		}
 		return value
-	case v.Func!=nil:
+	case v.Func != nil:
 		return v.Func.Eval(ctx)
 		//panic("func")
 	default:

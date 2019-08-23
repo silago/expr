@@ -7,7 +7,13 @@ import (
 )
 
 func main() {
+
 	expression := os.Args[1]
-	var x,_=ParseExpresstion(expression, nil)
-	log.Println(x)
+
+	var y, _ = ExtractVariables(expression)
+	log.Println(y)
+
+	//var x, _ = ParseExpresstion(expression, nil)
+	//log.Println(x)
+
 }
