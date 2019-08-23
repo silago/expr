@@ -1,7 +1,7 @@
-package main
+package expr
 
 import (
-	. "expr/lib"
+	. "github.com/silago/expr/lib"
 	"log"
 	"os"
 )
@@ -13,7 +13,7 @@ func main() {
 	var y, _ = ExtractVariables(expression)
 	log.Println(y)
 
-	//var x, _ = ParseExpresstion(expression, nil)
-	//log.Println(x)
+	var x, _ = ParseExpresstion(expression, nil)
+	log.Println(x)
 
 }
